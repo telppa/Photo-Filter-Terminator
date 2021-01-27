@@ -1,4 +1,8 @@
 ﻿/*
+2021.01.27
+增加没有找到任何 jpg 文件的提示。
+版本号2.1。
+
 2021.01.24
 绝大部分参数可以自定义。
 代码完全重构，实现高性能、低资源占用、低内存增长。
@@ -55,7 +59,7 @@ Numpad7、滚轮上、PgUp：上一页
 #SingleInstance Force
 SetBatchLines, -1
 
-global 选中图片被收藏到此文件夹下:="MyFavoriteImages"		;selected images are collected under this folder
+global 选中图片被收藏到此文件夹下:="MyFavoritePhotos"		;selected images are collected under this folder
 , 每行显示数量:=3											; number of pics per row
 , 每页几行:=2													; number of rows per page
 , 背景图x:=0													; background image x
@@ -99,7 +103,7 @@ return
 	, 图片被收藏后的透明度:=Max(图片被收藏后的透明度, 1)
 	, 背景模糊程度:=Min(背景模糊程度, 255)
 	, 软件名:="图片筛选机"
-	, 版本号:=2.0
+	, 版本号:=2.1
 
 	; 申明一些以后会用到的超级全局变量
 	global 全部文件列表, 当前页数, 每页显示数量, 最大页数, 末页显示数量, 坐标合集, 资源, 点击的是第几张图片
