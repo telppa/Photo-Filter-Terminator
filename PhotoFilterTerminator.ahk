@@ -1,6 +1,7 @@
 ﻿/*
 2021.01.27
 增加没有找到任何 jpg 文件的提示。
+修复没有保存图片时，文件夹被错误创建的问题。
 版本号2.1。
 
 2021.01.24
@@ -406,17 +407,15 @@ ApplySpecialFixedBlur(zBitmap, radius, pEffect, previewMode:=0) {
 }
 
 ; 返回1代表图片已经被收藏，返回0代表图片没有被收藏
-检查图片是否已被收藏(图片在当页的编号, ByRef 选中图片路径:="", ByRef OutFileName:="")
+检查图片是否已被收藏(图片在当页的编号, ByRef 选中图片路径:="", ByRef OutFileName:="", ByRef OutDir:="")
 {
-	选中图片路径:=全部文件列表[(当前页数-1)*每页显示数量+图片在当页的编号]
-	SplitPath, 选中图片路径, OutFileName, OutDir		;注意图片路径实际是相对路径，所以这里 OutDir 直接就是目录名，而不是整个路径。
+	选中图片路径:="", OutFileName:="", OutDir:=""		; ByRef 导致变量值是有记忆的，所以进来以后先清空一遍
+	, 选中图片路径:=全部文件列表[(当前页数-1)*每页显示数量+图片在当页的编号]
+	SplitPath, 选中图片路径, OutFileName, OutDir		; 注意图片路径实际是相对路径，所以这里 OutDir 直接就是目录名，而不是整个路径。
 	if (OutDir!="")
 		OutDir:=选中图片被收藏到此文件夹下 "\" OutDir "\"
 	else
 		OutDir:=选中图片被收藏到此文件夹下 "\"
-
-	;创建收藏文件夹
-	FileCreateDir, % OutDir
 
 	OutFileName:=OutDir 删除不能被用于创建文件或文件夹的字符(OutFileName)
 	if (!FileExist(OutFileName))
@@ -529,7 +528,7 @@ Numpad3::
 return
 
 收藏图片:
-	if (检查图片是否已被收藏(选中的是第几张图片, 源, 目标))
+	if (检查图片是否已被收藏(选中的是第几张图片, 源, 目标, 目标目录))
 	{
 		; 渐显
 		渐变显示单张DC(选中的是第几张图片, 1)
@@ -539,6 +538,7 @@ return
 	{
 		; 渐隐
 		渐变显示单张DC(选中的是第几张图片, 0)
+		FileCreateDir, % 目标目录		; 先创建目录，不然文件不一定能成功复制 
 		FileCopy, % 源, % 目标
 	}
 return
