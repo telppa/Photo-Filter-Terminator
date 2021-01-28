@@ -604,6 +604,10 @@ return, str
 }
 
 ; ========== The following are all Gdip library =========
+; Gdip_All.ahk - GDI+ library compilation of user contributed GDI+ functions
+; made by Marius Șucan: https://github.com/marius-sucan/AHK-GDIp-Library-Compilation
+; a fork from: https://github.com/mmikeww/AHKv2-Gdip
+; based on https://github.com/tariqporter/Gdip
 UpdateLayeredWindow(hwnd, hdc, x:="", y:="", w:="", h:="", Alpha:=255) {
 Static Ptr := "UPtr"
 if ((x != "") && (y != ""))
