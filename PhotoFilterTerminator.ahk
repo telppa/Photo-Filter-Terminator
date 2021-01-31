@@ -1,4 +1,9 @@
 ﻿/*
+2021.01.31
+修复win7、win8报错的问题。
+实现完美圆角效果，但速度较慢，相关代码被注释。
+版本号2.2。
+
 2021.01.27
 增加没有找到任何 jpg 文件的提示。
 修复没有保存图片时，文件夹被错误创建的问题。
@@ -104,7 +109,7 @@ return
 	, 图片被收藏后的透明度:=Max(图片被收藏后的透明度, 1)
 	, 背景模糊程度:=Min(背景模糊程度, 255)
 	, 软件名:="图片筛选机"
-	, 版本号:=2.1
+	, 版本号:=2.2
 
 	; 申明一些以后会用到的超级全局变量
 	global 全部文件列表, 当前页数, 每页显示数量, 最大页数, 末页显示数量, 坐标合集, 资源, 点击的是第几张图片
@@ -151,7 +156,7 @@ return
 	loop, % 每页显示数量
 	{
 		; 大坑！父窗口必须先于子窗口显示出来，否则子窗口内容不可见！
-		Gui, 图%A_Index%: +E0x80000 +AlwaysOnTop -Caption +ToolWindow +Hwnd图%A_Index%句柄 +Parent背景图
+		Gui, 图%A_Index%: +E0x80000 +AlwaysOnTop -Caption +ToolWindow +Hwnd图%A_Index%句柄 +Owner背景图
 		Gui, 图%A_Index%: Show, NA
 	}
 
@@ -217,6 +222,10 @@ return
 
 			; 根据测试，不管是放大还是缩小，尤其是缩小，模式0是最快效果又还不错的
 			, Gdip_SetInterpolationMode(资源[G], 0)
+			; 抗锯齿模式
+			, Gdip_SetSmoothingMode(资源[G], 4)
+			; 这是画出完美圆角矩形的关键设置
+			, Gdip_SetPixelOffsetMode(资源[G], 2)
 		}
 }
 
@@ -290,6 +299,15 @@ return
 		}
 		; 资源[缓存标记 "_图" A_Index "_G"] ----> 资源["本页_图1_G"]
 		Gdip_GraphicsClear(资源[缓存标记 "_图" A_Index "_G"])		; 先清空画布再画图
+		; pBitmap:=Gdip_ResizeBitmap(pBitmap, 图片显示w, 图片显示h, 0)
+		; pBrush:= Gdip_CreateTextureBrush(pBitmap, 0)
+		; 想象一个表面有图案的滚筒，图案的0点与画布0点永恒绑定。
+		; 当我们将画布50点作为起点作画时，显然图案也会从50点开始滚出。
+		; 所以 Gdip_PathGradientTranslateTransform() 的作用就是 ——
+		; 当我们将画布50点作为起点作画时，图案可以从指定点（这里是0点）开始滚出。
+		; Gdip_PathGradientTranslateTransform(pBrush, 图片显示x, 图片显示y)
+		; Gdip_FillRoundedRectanglePath(资源[缓存标记 "_图" A_Index "_G"], pBrush, 图片显示x, 图片显示y, 图片显示w, 图片显示h, 4)
+		; Gdip_DeleteBrush(pBrush)
 		Gdip_DrawImage(资源[缓存标记 "_图" A_Index "_G"], pBitmap, 图片显示x, 图片显示y, 图片显示w, 图片显示h, 0, 0, 图片实际w, 图片实际h)
 
 		if (A_Index=背景页)		; 将背景图进行模糊处理
@@ -297,7 +315,7 @@ return
 			; 因为模糊处理非常耗时间，所以先把图片缩小到待显示的1/4大小，进行模糊，再放大，就可以在效果差异不大的情况下加速
 			pBitmap:=Gdip_ResizeBitmap(pBitmap, 坐标合集["背景图w"]//2, 坐标合集["背景图h"]//2, 0)
 			, pEffect := Gdip_CreateEffect(1, 背景模糊程度, 0, 0)		; 创建模糊效果
-			, ApplySpecialFixedBlur(pBitmap, 背景模糊程度, pEffect)		; 应用模糊效果
+			, Gdip_ApplySpecialFixedBlur(pBitmap, 背景模糊程度, pEffect)		; 应用模糊效果
 			, pBitmap:=Gdip_ResizeBitmap(pBitmap, 坐标合集["背景图w"], 坐标合集["背景图h"], 0)		; 把背景图放大回去
 			, Gdip_GraphicsClear(资源[缓存标记 "_背景图_G"])		; 先清空画布，再画图
 			, Gdip_DrawImageFast(资源[缓存标记 "_背景图_G"], pBitmap)
@@ -309,7 +327,7 @@ return
 	return, true
 }
 
-ApplySpecialFixedBlur(zBitmap, radius, pEffect, previewMode:=0) {
+Gdip_ApplySpecialFixedBlur(zBitmap, radius, pEffect, previewMode:=0) {
 	if (!pEffect || !zBitmap)
 	{
 		 return, false
