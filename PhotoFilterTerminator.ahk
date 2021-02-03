@@ -192,7 +192,6 @@ return
 背景图GuiClose:
 背景图GuiEscape:
 GdipExit:
-Esc::
 	FileDelete, PhotoFilterTerminator.txt
 	FileAppend, %当前页数%, PhotoFilterTerminator.txt
 	资源回收()
@@ -509,6 +508,9 @@ WM_LBUTTONDOWN()
 }
 
 #If WinActive(软件名)
+Esc::
+	gosub, GdipExit
+return
 ; 笔记本电脑很多没有小键盘区域，所以在主区域也增加一组键盘设置
 ; 默认只预设了 横*竖 3*2 的图片布局 的键盘设置
 图片被点击:
