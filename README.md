@@ -6,16 +6,17 @@ Imagine you just got back from a trip where you took 3000 photos, most of them a
 This tool can help you get there quickly.
 
 ![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/1.gif)  
+![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/2.gif)  
 ---
 
 #### You can customize many parameters, such as the layout. 
-![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/2x1.png)  
-![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/3x2.png)  
-![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/3x3.png)  
+![2x1](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/2x1.png)  
+![3x2](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/3x2.png)  
+![3x3](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/3x3.png)  
 
 #### It supports both keyboard and mouse operation and is designed for one-handed operation. 
-![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/keyboard1.png)  
-![](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/keyboard2.png)  
+![keyboard1](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/keyboard1.png)  
+![keyboard2](https://raw.githubusercontent.com/telppa/Photo-Filter-Terminator/main/Screenshots/keyboard2.png)  
 
 #### You can exit at any time, it remembers your last browsing progress.
 
