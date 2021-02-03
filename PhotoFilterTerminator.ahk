@@ -1,4 +1,9 @@
 ﻿/*
+2021.02.03
+修复选择图片后，退出失效的问题。
+修复选择图片后，快速翻页导致错误显示被选择图片的问题。
+版本号2.3
+
 2021.01.31
 修复win7、win8报错的问题。
 实现完美圆角效果，但速度较慢，相关代码被注释。
@@ -109,7 +114,7 @@ return
 	, 图片被收藏后的透明度:=Max(图片被收藏后的透明度, 1)
 	, 背景模糊程度:=Min(背景模糊程度, 255)
 	, 软件名:="图片筛选机"
-	, 版本号:=2.2
+	, 版本号:=2.3
 
 	; 申明一些以后会用到的超级全局变量
 	global 全部文件列表, 当前页数, 每页显示数量, 最大页数, 末页显示数量, 坐标合集, 资源, 点击的是第几张图片
@@ -187,6 +192,7 @@ return
 背景图GuiClose:
 背景图GuiEscape:
 GdipExit:
+Esc::
 	FileDelete, PhotoFilterTerminator.txt
 	FileAppend, %当前页数%, PhotoFilterTerminator.txt
 	资源回收()
@@ -397,6 +403,7 @@ Gdip_ApplySpecialFixedBlur(zBitmap, radius, pEffect, previewMode:=0) {
 
 渐变显示单张DC(图片在当页的编号, 显或隐, 缓存标记:="本页")
 {
+	Critical, On
 	if (显或隐=1)
 	{
 		; 渐显
@@ -422,6 +429,7 @@ Gdip_ApplySpecialFixedBlur(zBitmap, radius, pEffect, previewMode:=0) {
 			Sleep, 15
 		}
 	}
+	Critical, Off
 }
 
 ; 返回1代表图片已经被收藏，返回0代表图片没有被收藏
